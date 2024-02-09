@@ -5,22 +5,22 @@ const saltRounds = 10;
 
 async function userSignUp(req,res){
     try {
-        if(!req.body.email){
-            res.status(400).json({
-                message: "please provide an email..!",
-                error: true,
-                success: false
-            })
-        }
         if(!req.body.name){
-            res.status(401).json({
+             return res.status(401).json({
                 message: "please provide an name..!",
                 error: true,
                 success: false
             })
         }
+        if(!req.body.email){
+            return res.status(401).json({
+                message: "please provide an email..!",
+                error: true,
+                success: false
+            })
+        }
         if(!req.body.password){
-            res.status(401).json({
+            return res.status(401).json({
                 message: "please provide a password..!",
                 error: true,
                 success: false
@@ -30,7 +30,7 @@ async function userSignUp(req,res){
         const user = await userModel.findOne({email: req.body.email})
     
         if(user){
-            return res.status(200).json({
+            return res.status(409).json({
                 message: "User Is Already Exists..!",
                 error: true,
                 success: false
@@ -40,7 +40,7 @@ async function userSignUp(req,res){
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(req.body.password, salt, async function(err, hash) {
                 if(err){
-                    return res.status(200).json({
+                    return res.status(400).json({
                         message: err,
                         error: true,
                         success: false
@@ -64,7 +64,7 @@ async function userSignUp(req,res){
         });
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: error,
             error: true,
             success: false
