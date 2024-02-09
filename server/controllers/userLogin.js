@@ -7,14 +7,14 @@ async function userLogin(req,res){
         const {email,password} = req.body
 
         if(!email){
-            res.status(201).json({
+            return res.status(401).json({
                 message: "please provide an email..!",
                 error: true,
                 success: false
             })
         }
         if(!password){
-            return res.status(201).json({
+            return res.status(401).json({
                 message: "please provide a password..!",
                 error: true,
                 success: false
@@ -23,7 +23,7 @@ async function userLogin(req,res){
         const user = await userModel.findOne({email})
         if(!user){
             console.log(user)
-            return res.status(201).json({
+            return res.status(404).json({
                 message: "User Not Available..!",
                 error: true,
                 success: false
@@ -33,15 +33,15 @@ async function userLogin(req,res){
         bcrypt.compare(password, user.password, function(err, result) {
             // result == true
             console.log(result)
-            // if(err){
-            //     return res.status(201).json({
-            //         message: "Your Password does not match",
-            //         error: true,
-            //         success: false
-            //     })
-            // }
+            if(err){
+                return res.status(500).json({
+                    message: err,
+                    error: true,
+                    success: false
+                })
+            }
             if(!result){
-                return res.status(201).json({
+                return res.status(401).json({
                     message: "Your password does not match",
                     error: true,
                     success: false
