@@ -9,7 +9,6 @@ const Login = () => {
         email: "",
         password: ""
     });
-    // const [err,seterr]=useState(false)
     const handleOnChange=(e)=>{
         const {name,value} = e.target
         setData((prev)=>{
@@ -31,7 +30,6 @@ const Login = () => {
                     email: "",
                     password: ""
                 })
-                // seterr(true)
             }
             if(response.data.success){
                 toast.success(response.data.message);
@@ -39,17 +37,21 @@ const Login = () => {
                 navigate("/user-profile")
             }
         } catch (error) {
-            
+            if(error.response.status===404){
+                toast.error("User Not Found");
+            }
+            if(error.response.status===401){
+                toast.error(error.response.data.message);
+            }
         }
         
     }
     console.log("data",data);
-//   useEffect(() => {
-//    if(token){
-//     navigate('/user-profile')
-//    }
-//   }, [])
-  
+    // useEffect(() => {
+    // if(token){
+    //     navigate('/user-profile')
+    // }
+    // }, [])
 
     return (
         <>
